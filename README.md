@@ -4,9 +4,6 @@ python sdk for [腾讯优图云人脸服务](http://open.youtu.qq.com/)
 ## 安装
 本sdk依赖于Requests包，用户需自己安装
 
-### 使用pip
-pip install TencentYoutuyun
-
 ### 下载源码
 从github下载源码装入到您的程序中，并加载TencentYoutuyun包
 
