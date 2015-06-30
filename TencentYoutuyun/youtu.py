@@ -20,6 +20,7 @@ class YouTu(object):
         self.IMAGES_EMPTY    = -7
         self.FACE_IDS_EMPTY  = -8
         self.FACE_ID_ETPTY   = -9
+        self.LIST_TYPE_INVALID = -10
         
         self.EXPIRED_SECONDS = 2592000
         self._secret_id  = secret_id
@@ -55,12 +56,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':'', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
             ret = r.json()
+            
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
-            else :
-                return {'httpcode':0,  'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+            return {'httpcode':0,  'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
                 
         return ret            
     
@@ -90,22 +91,22 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:  
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "confidence":0, "ismatch":0, "session_id":''}
             ret = r.json()
+            
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "confidence":0, "ismatch":0, "session_id":''}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "confidence":0, "ismatch":0, "session_id":''}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "confidence":0, "ismatch":0, "session_id":''}
                 
         return ret 
         
     def FaceIdentify(self, group_id, image, userid = '0'):
         filepath = os.path.abspath(image)
         if not os.path.exists(filepath):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "person_id":'', "face_id":'', "confidence":0}
+            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "candidates":[{}]}
         
         if len(group_id) == 0:
-            return {'httpcode':0, 'errorcode':self.GROUP_ID_EMPTY, 'errormsg':'GROUP_ID_EMPTY', "session_id":'', "person_id":'', "face_id":'', "confidence":0}
+            return {'httpcode':0, 'errorcode':self.GROUP_ID_EMPTY, 'errormsg':'GROUP_ID_EMPTY', "session_id":'', "candidates":[{}]}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
         url = self.generate_res_url('faceidentify', userid)
@@ -126,12 +127,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:  
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "session_id":'', "candidates":[{}]}
             ret = r.json()
+            
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "session_id":'', "person_id":'', "face_id":'', "confidence":0}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "session_id":'', "person_id":'', "face_id":'', "confidence":0}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "session_id":'', "candidates":[{}]}
                 
         return ret 
         
@@ -158,12 +159,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
             ret = r.json()
+            
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
                 
         return ret 
    
@@ -178,7 +179,10 @@ class YouTu(object):
         
         if len(group_ids) == 0:
             return {'httpcode':0, 'errorcode':self.GROUP_IDS_EMPTY, 'errormsg':'GROUP_IDS_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
-           
+        
+        if type(group_ids) != list:
+            return {'httpcode':0, 'errorcode': self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            
         expired = int(time.time()) + self.EXPIRED_SECONDS
         url = self.generate_res_url('newperson', userid)
         
@@ -201,12 +205,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+                
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
                        
         return ret 
         
@@ -232,12 +236,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                 return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "deleted":0, "session_id":''}
+                 
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "deleted":0, "session_id":''}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "deleted":0, "session_id":''}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "deleted":0, "session_id":''}
                  
         return ret 
     
@@ -248,6 +252,9 @@ class YouTu(object):
         if len(images) == 0:
             return {'httpcode':0, 'errorcode':self.IMAGES_EMPTY, 'errormsg':'IMAGES_EMPTY', "face_ids":[], "session_id":'', "added": 0}
         
+        if type(images) != list:
+            return {'httpcode':0, 'errorcode':self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "face_ids":[], "session_id":'', "added": 0}
+            
         images_content = []
         for image in images:
             filepath = os.path.abspath(image)
@@ -276,12 +283,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                  return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "face_ids":[], "session_id":'', "added": 0}
+                  
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "face_ids":[], "session_id":'', "added": 0}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "face_ids":[], "session_id":'', "added": 0}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "face_ids":[], "session_id":'', "added": 0}
                  
         return ret 
     
@@ -291,7 +298,10 @@ class YouTu(object):
         
         if len(face_ids) == 0:
             return {'httpcode':0, 'errorcode':self.FACE_IDS_IMPTY, 'errormsg':'FACE_IDS_IMPTY',  "session_id":'', "deleted ": 0}
-         
+        
+        if type(face_ids) != list:
+            return {'httpcode':0, 'errorcode':self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID',  "session_id":'', "deleted ": 0} 
+            
         expired = int(time.time()) + self.EXPIRED_SECONDS
         url = self.generate_res_url('delface', userid)
         
@@ -311,12 +321,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'',  "session_id":'', "deleted ": 0}
+                 
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "session_id":'', "deleted ": 0}
-            else :
-                 return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "session_id":'', "deleted ": 0}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "session_id":'', "deleted ": 0}
                  
         return ret        
     
@@ -345,12 +355,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'',  "person_id":'', "session_id ": ''}
+                
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "person_id":'', "session_id ": ''}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "person_id":'', "session_id ": ''}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "person_id":'', "session_id ": ''}
                  
         return ret 
         
@@ -376,12 +386,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'',  "person_id":'', "person_name ": '', "face_ids":[], "tag":'', "secret_id":''}
             ret = r.json()
+            
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "person_id":'', "person_name ": '', "face_ids":[], "tag":'', "secret_id":''}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "person_id":'', "person_name ": '', "face_ids":[], "tag":'', "secret_id":''}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "person_id":'', "person_name ": '', "face_ids":[], "tag":'', "secret_id":''}
                 
         return ret 
     
@@ -403,12 +413,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'',  "group_ids":[]}
+                
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "group_ids":[]}
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "group_ids":[]}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "group_ids":[]}
                 
         return ret
         
@@ -434,12 +444,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "person_ids":[]}    
+                
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_ids":[]}              
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_ids":[]}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_ids":[]}
                 
         return ret
     
@@ -465,12 +475,12 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'',  "face_ids":[]}  
+                
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "face_ids":[]}          
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "face_ids":[]}  
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "face_ids":[]}  
                 
         return ret    
     
@@ -496,14 +506,46 @@ class YouTu(object):
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                 return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'',  "face_info":[]}   
+                 
             ret = r.json()
         except Exception as e:
-            if r :    
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "face_info":[]}         
-            else :
-                return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "face_info":[]}  
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e),  "face_info":[]}  
                 
         return ret 
+    
+    def FaceShape(self, image, userid = '0'):
+        filepath = os.path.abspath(image)
+        if not os.path.exists(filepath):
+            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
+        
+        expired = int(time.time()) + self.EXPIRED_SECONDS
+        url = self.generate_res_url('faceshape', userid)
+        
+        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        sign = auth.app_sign(expired)
+        
+        headers = {
+            'Authorization': sign
+        }
+        
+        data = {
+            "app_id": self._appid,
+            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        }
+        
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
+  
+            ret = r.json()          
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
+                
+        return ret
         
     def generate_res_url(self, req_type, userid = '0'):
         app_info = conf.get_app_info()
