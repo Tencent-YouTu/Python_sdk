@@ -10,7 +10,7 @@ from .auth import Auth
 
 class YouTu(object):
 
-    def __init__(self, appid, secret_id, secret_key):
+    def __init__(self, appid, secret_id, secret_key, userid='0'):
         self.IMAGE_FILE_NOT_EXISTS = -1
         self.IMAGE_NETWORK_ERROR = -2
         self.IMAGE_PARAMS_ERROR = -3
@@ -19,17 +19,18 @@ class YouTu(object):
         self.GROUP_IDS_EMPTY = -6
         self.IMAGES_EMPTY    = -7
         self.FACE_IDS_EMPTY  = -8
-        self.FACE_ID_ETPTY   = -9
+        self.FACE_ID_EMPTY   = -9
         self.LIST_TYPE_INVALID = -10
         
         self.EXPIRED_SECONDS = 2592000
         self._secret_id  = secret_id
         self._secret_key = secret_key
         self._appid      = appid
-
+        self._userid     = userid
+        
         conf.set_app_info(appid, secret_id, secret_key)
         
-    def FaceCompare(self, imageA, imageB, userid = '0'):
+    def FaceCompare(self, imageA, imageB):
         filepathA = os.path.abspath(imageA)
         filepathB = os.path.abspath(imageB)
         if not os.path.exists(filepathA):
@@ -38,9 +39,9 @@ class YouTu(object):
             return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('facecompare', userid)
+        url = self.generate_res_url('facecompare')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -65,7 +66,7 @@ class YouTu(object):
                 
         return ret            
     
-    def FaceVerify(self, person_id, image, userid = '0'):
+    def FaceVerify(self, person_id, image):
         filepath = os.path.abspath(image)
         if not os.path.exists(filepath):
             return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "confidence":0, "ismatch":0, "session_id":''}
@@ -73,9 +74,9 @@ class YouTu(object):
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "confidence":0, "ismatch":0, "session_id":''}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('faceverify', userid)
+        url = self.generate_res_url('faceverify')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -100,7 +101,7 @@ class YouTu(object):
                 
         return ret 
         
-    def FaceIdentify(self, group_id, image, userid = '0'):
+    def FaceIdentify(self, group_id, image):
         filepath = os.path.abspath(image)
         if not os.path.exists(filepath):
             return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "candidates":[{}]}
@@ -109,9 +110,9 @@ class YouTu(object):
             return {'httpcode':0, 'errorcode':self.GROUP_ID_EMPTY, 'errormsg':'GROUP_ID_EMPTY', "session_id":'', "candidates":[{}]}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('faceidentify', userid)
+        url = self.generate_res_url('faceidentify')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -136,15 +137,15 @@ class YouTu(object):
                 
         return ret 
         
-    def DetectFace(self, image, userid = '0'):
+    def DetectFace(self, image):
         filepath = os.path.abspath(image)
         if not os.path.exists(filepath):
             return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('detectface', userid)
+        url = self.generate_res_url('detectface')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -169,7 +170,7 @@ class YouTu(object):
         return ret 
    
     
-    def NewPerson(self, person_id, image, group_ids, person_name= '', tag='', userid = '0'):
+    def NewPerson(self, person_id, image, group_ids, person_name= '', tag=''):
         filepath = os.path.abspath(image)
         if not os.path.exists(filepath):
             return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
@@ -184,9 +185,9 @@ class YouTu(object):
             return {'httpcode':0, 'errorcode': self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
             
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('newperson', userid)
+        url = self.generate_res_url('newperson')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -214,14 +215,14 @@ class YouTu(object):
                        
         return ret 
         
-    def DelPerson(self, person_id, userid = '0') :   
+    def DelPerson(self, person_id) :   
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "deleted":0, "session_id":''}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('delperson', userid)
+        url = self.generate_res_url('delperson')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -245,7 +246,7 @@ class YouTu(object):
                  
         return ret 
     
-    def AddFace(self, person_id, images, tag='', userid = '0'): 
+    def AddFace(self, person_id, images, tag=''): 
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "face_ids":[], "session_id":'', "added": 0}
         
@@ -264,9 +265,9 @@ class YouTu(object):
             images_content.append(base64.b64encode(open(filepath, 'rb').read()).rstrip())
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('addface', userid)
+        url = self.generate_res_url('addface')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -292,7 +293,7 @@ class YouTu(object):
                  
         return ret 
     
-    def DelFace(self, person_id, face_ids, userid = '0'):
+    def DelFace(self, person_id, face_ids):
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "session_id":'', "deleted ": 0}
         
@@ -303,9 +304,9 @@ class YouTu(object):
             return {'httpcode':0, 'errorcode':self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID',  "session_id":'', "deleted ": 0} 
             
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('delface', userid)
+        url = self.generate_res_url('delface')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -331,14 +332,14 @@ class YouTu(object):
         return ret        
     
     
-    def SetInfo(self, person_id, person_name='', tag='',userid = '0'):
+    def SetInfo(self, person_id, person_name='', tag=''):
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "person_id":'', "session_id ": ''}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('setinfo', userid)
+        url = self.generate_res_url('setinfo')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -364,14 +365,14 @@ class YouTu(object):
                  
         return ret 
         
-    def GetInfo(self, person_id, userid = '0'):
+    def GetInfo(self, person_id):
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "person_id":'', "person_name ": '', "face_ids":[], "tag":'', "secret_id":''}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getinfo', userid)
+        url = self.generate_res_url('getinfo')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -395,11 +396,11 @@ class YouTu(object):
                 
         return ret 
     
-    def GetGroupIds(self, userid = '0'):
+    def GetGroupIds(self):
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getgroupids', userid)
+        url = self.generate_res_url('getgroupids')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -422,14 +423,14 @@ class YouTu(object):
                 
         return ret
         
-    def GetPersonIds(self, group_id, userid = '0') :
+    def GetPersonIds(self, group_id) :
         if len(group_id) == 0:
             return {'httpcode':0, 'errorcode':self.GROUP_ID_EMPTY, 'errormsg':'GROUP_ID_EMPTY', "person_ids":[]}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getpersonids', userid)
+        url = self.generate_res_url('getpersonids')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -453,14 +454,14 @@ class YouTu(object):
                 
         return ret
     
-    def GetFaceIds(self, person_id, userid = '0'):
+    def GetFaceIds(self, person_id):
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "face_ids":[]}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getfaceids', userid)
+        url = self.generate_res_url('getfaceids')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -484,14 +485,14 @@ class YouTu(object):
                 
         return ret    
     
-    def GetFaceInfo(self, face_id, userid = '0'):
+    def GetFaceInfo(self, face_id):
         if len(face_id) == 0:
-            return {'httpcode':0, 'errorcode':self.FACE_ID_ETPTY, 'errormsg':'FACE_ID_ETPTY',  "face_info":[]}
+            return {'httpcode':0, 'errorcode':self.FACE_ID_EMPTY, 'errormsg':'FACE_ID_EMPTY',  "face_info":[]}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getfaceinfo', userid)
+        url = self.generate_res_url('getfaceinfo')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -515,15 +516,15 @@ class YouTu(object):
                 
         return ret 
     
-    def FaceShape(self, image, userid = '0'):
+    def FaceShape(self, image):
         filepath = os.path.abspath(image)
         if not os.path.exists(filepath):
             return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
         
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('faceshape', userid)
+        url = self.generate_res_url('faceshape')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, userid)
+        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         sign = auth.app_sign(expired)
         
         headers = {
@@ -547,7 +548,7 @@ class YouTu(object):
                 
         return ret
         
-    def generate_res_url(self, req_type, userid = '0'):
+    def generate_res_url(self, req_type):
         app_info = conf.get_app_info()
         return app_info['end_point'] + str(req_type);
     
