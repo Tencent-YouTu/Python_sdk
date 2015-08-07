@@ -62,6 +62,13 @@ print ret
 	- `image` 待检测的图片路径
 	- `mode` 是否大脸模式，默认非大脸模式
 
+###人脸配准
+- 接口
+`FaceShape(self, image, mode = 0)`
+- 参数
+	- `image` 待检测的图片路径
+	- `mode` 是否大脸模式，默认非大脸模式
+
 ###人脸比对
 - 接口
 `FaceCompare(self, imageA, imageB):`
