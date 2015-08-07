@@ -517,7 +517,7 @@ class YouTu(object):
                 
         return ret 
     
-    def FaceShape(self, image):
+    def FaceShape(self, image, mode = 0):
         filepath = os.path.abspath(image)
         if not os.path.exists(filepath):
             return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
@@ -534,7 +534,8 @@ class YouTu(object):
         
         data = {
             "app_id": self._appid,
-            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip(),
+            "mode": mode
         }
         
         r = {}
