@@ -80,7 +80,7 @@ print ret
 - 接口
 `FaceVerify(self, person_id, image)`
 - 参数
-	- `person_id` 待验证的人脸id
+	- `person_id` 待验证的个体id
 	- `image` 待验证的图片路径
 
 ###人脸识别
@@ -95,7 +95,7 @@ print ret
         `NewPerson(self, person_id, image, group_ids, person_name= '', tag='')`
 - 参数
 	- `person_id` 新建的个体id，用户指定，需要保证app_id下的唯一性
-	- `person_name` 待验证的图片数据
+	- `person_name` 个体对应的姓名
 	- `group_ids` 数组类型，用户指定（组默认创建）的个体存放的组id，可以指定多个组id
 	- `image` 包含个体人脸的图片路径
 	- `tag` 备注信息，用户自解释字段
