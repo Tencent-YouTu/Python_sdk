@@ -10,7 +10,7 @@ from .auth import Auth
 
 class YouTu(object):
 
-    def __init__(self, appid, secret_id, secret_key, userid='0'):
+    def __init__(self, appid, secret_id, secret_key, userid='0', end_point=conf.API_YOUTU_END_POINT):
         self.IMAGE_FILE_NOT_EXISTS = -1
         self.IMAGE_NETWORK_ERROR = -2
         self.IMAGE_PARAMS_ERROR = -3
@@ -27,8 +27,8 @@ class YouTu(object):
         self._secret_key = secret_key
         self._appid      = appid
         self._userid     = userid
-        
-        conf.set_app_info(appid, secret_id, secret_key)
+        self._end_point  = end_point
+        conf.set_app_info(appid, secret_id, secret_key, end_point)
         
     def FaceCompare(self, imageA, imageB):
         filepathA = os.path.abspath(imageA)
