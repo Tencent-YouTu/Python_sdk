@@ -28,7 +28,7 @@ class YouTu(object):
         self._appid      = appid
         self._userid     = userid
         self._end_point  = end_point
-        conf.set_app_info(appid, secret_id, secret_key, end_point)
+        conf.set_app_info(appid, secret_id, secret_key, userid, end_point)
         
     def FaceCompare(self, imageA, imageB):
         filepathA = os.path.abspath(imageA)
