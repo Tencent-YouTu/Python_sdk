@@ -36,8 +36,8 @@ secret_id = 'xxxxxxx'
 secret_key = 'xxxxxxxx'
 userid= 'xxx'
 
-#end_point = TencentYoutuyun.conf.API_TENCENTYUN_END_POINT 
-end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT 
+#end_point = TencentYoutuyun.conf.API_TENCENTYUN_END_POINT  // 腾讯云
+end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT        // 优图开放平台
 
 youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)
 
@@ -116,7 +116,7 @@ print ret
     
 ###新建个体
 - 接口
-        `(self, person_id, image_path, group_ids, person_name= '', tag='', data_type = 0)`
+`NewPerson(self, person_id, image_path, group_ids, person_name= '', tag='', data_type = 0)`
 - 参数
 	- `person_id` 新建的个体id，用户指定，需要保证app_id下的唯一性
 	- `person_name` 个体对应的姓名
