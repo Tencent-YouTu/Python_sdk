@@ -2,13 +2,13 @@
 import pkg_resources
 import platform
 
-API_YOUTU_END_POINT = 'http://api.youtu.qq.com/youtu/api/'
-API_TENCENTYUN_END_POINT = 'http://youtu.api.qcloud.com/youtu/api/'
+API_YOUTU_END_POINT = 'http://api.youtu.qq.com/'
+API_TENCENTYUN_END_POINT = 'https://youtu.api.qcloud.com/'
 
-APPID = '105054'
-SECRET_ID = 'AKIDc55TZh5E4OfhUOgoMzY3Piq5HziE5PLziWYR'
-SECRET_KEY = 'J9I1LNj5Wdr8TxI2VyWai3Ziz5TiZ2vZsp'
-USER_ID = '0'
+APPID = 'xxx'
+SECRET_ID = 'xxx'
+SECRET_KEY = 'xx'
+USER_ID = 'xx'
 
 _config = {
     'end_point':API_YOUTU_END_POINT,

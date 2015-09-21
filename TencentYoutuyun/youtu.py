@@ -21,6 +21,7 @@ class YouTu(object):
         self.FACE_IDS_EMPTY  = -8
         self.FACE_ID_EMPTY   = -9
         self.LIST_TYPE_INVALID = -10
+        self.IMAGE_PATH_EMPTY = -11
         
         self.EXPIRED_SECONDS = 2592000
         self._secret_id  = secret_id
@@ -29,31 +30,57 @@ class YouTu(object):
         self._userid     = userid
         self._end_point  = end_point
         conf.set_app_info(appid, secret_id, secret_key, userid, end_point)
-        
-    def FaceCompare(self, imageA, imageB):
-        filepathA = os.path.abspath(imageA)
-        filepathB = os.path.abspath(imageB)
-        if not os.path.exists(filepathA):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
-        if not os.path.exists(filepathB):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
-        
+    
+    def get_headers(self, req_type):
+       
         expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('facecompare')
-        
         auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
         
-        headers = {
-            'Authorization': sign
-        }
+        sign = auth.app_sign(expired)
+        headers = {'Authorization':sign}    
+        
+        return headers    
+        
+    def generate_res_url(self, req_type, url_type = 0):
+        
+        app_info = conf.get_app_info()
+        url_api_str = '' 
+        
+        if url_type == 0:
+            url_api_str = 'youtu/api'
+        else:
+            url_api_str = 'youtu/imageapi'    
+            
+        return app_info['end_point'] + url_api_str + '/' + str(req_type)
+    
+    def FaceCompare(self, image_pathA, image_pathB, data_type = 0):
+        
+        req_type = 'facecompare'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
         
         data = {
-            "app_id": self._appid,
-            "imageA": base64.b64encode(open(filepathA, 'rb').read()).rstrip(),
-            "imageB": base64.b64encode(open(filepathB, 'rb').read()).rstrip()
+            "app_id": self._appid
         }
         
+        if len(image_pathA) == 0 or len(image_pathB) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+       
+        if data_type == 0:  
+            filepathA = os.path.abspath(image_pathA)
+            filepathB = os.path.abspath(image_pathB)
+            
+            if not os.path.exists(filepathA):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+            if not os.path.exists(filepathB):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+            
+            data["imageA"] = base64.b64encode(open(filepathA, 'rb').read()).rstrip()
+            data["imageB"] = base64.b64encode(open(filepathB, 'rb').read()).rstrip()
+        else :
+            data["urlA"] = image_pathA
+            data["urlB"] = image_pathB
+             
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
@@ -66,28 +93,30 @@ class YouTu(object):
                 
         return ret            
     
-    def FaceVerify(self, person_id, image):
-        filepath = os.path.abspath(image)
-        if not os.path.exists(filepath):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "confidence":0, "ismatch":0, "session_id":''}
-        if len(person_id) == 0:
-            return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "confidence":0, "ismatch":0, "session_id":''}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('faceverify')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
-        
+    def FaceVerify(self, person_id, image_path, data_type = 0):
+       
+        req_type='faceverify' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+
         data = {
             "app_id": self._appid,
-            "person_id": person_id,
-            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            "person_id": person_id
         }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', "confidence":0, "ismatch":0, "session_id":''}
+        
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "confidence":0, "ismatch":0, "session_id":''}
+            if len(person_id) == 0:
+                return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "confidence":0, "ismatch":0, "session_id":''}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else :
+            data["url"] = image_path
         
         r = {}
         try:
@@ -101,30 +130,33 @@ class YouTu(object):
                 
         return ret 
         
-    def FaceIdentify(self, group_id, image):
-        filepath = os.path.abspath(image)
-        if not os.path.exists(filepath):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "candidates":[{}]}
+    def FaceIdentify(self, group_id, image_path, data_type = 0):
         
-        if len(group_id) == 0:
-            return {'httpcode':0, 'errorcode':self.GROUP_ID_EMPTY, 'errormsg':'GROUP_ID_EMPTY', "session_id":'', "candidates":[{}]}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('faceidentify')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
+        req_type='faceidentify' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
         
         data = {
-            "app_id": self._appid,
-            "group_id": group_id,
-            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            "app_id": self._appid
         }
         
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', "session_id":'', "candidates":[{}]}
+        
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "candidates":[{}]}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else :
+            data["url"] = image_path
+            
+        if len(group_id) == 0:
+            return {'httpcode':0, 'errorcode':self.GROUP_ID_EMPTY, 'errormsg':'GROUP_ID_EMPTY', "session_id":'', "candidates":[{}]}
+        else :
+            data["group_id"] = group_id
+         
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
@@ -137,27 +169,29 @@ class YouTu(object):
                 
         return ret 
         
-    def DetectFace(self, image, mode = 0):
-        filepath = os.path.abspath(image)
-        if not os.path.exists(filepath):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
+    def DetectFace(self, image_path, mode = 0, data_type = 0):
         
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('detectface')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
+        req_type='detectface' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
         
         data = {
             "app_id": self._appid,
-            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip(),
             "mode": mode
         }
         
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
+                 
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else :
+            data["url"] = image_path
+         
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
@@ -171,39 +205,41 @@ class YouTu(object):
         return ret 
    
     
-    def NewPerson(self, person_id, image, group_ids, person_name= '', tag=''):
-        filepath = os.path.abspath(image)
-        if not os.path.exists(filepath):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+    def NewPerson(self, person_id, image_path, group_ids, person_name= '', tag='', data_type = 0):
+        
+        req_type='newperson' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
         
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
         
         if len(group_ids) == 0:
             return {'httpcode':0, 'errorcode':self.GROUP_IDS_EMPTY, 'errormsg':'GROUP_IDS_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
-        
+
         if type(group_ids) != list:
             return {'httpcode':0, 'errorcode': self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
             
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('newperson')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
-        
         data = {
             "app_id": self._appid,
             "person_id" : person_id,
             "person_name": person_name,
-            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip(),
             "group_ids": group_ids,
             "tag": tag
         }
         
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
+            
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
@@ -216,19 +252,14 @@ class YouTu(object):
                        
         return ret 
         
-    def DelPerson(self, person_id) :   
+    def DelPerson(self, person_id) :  
+        
+        req_type='delperson' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "deleted":0, "session_id":''}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('delperson')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
         
         data = {
             "app_id": self._appid,
@@ -247,54 +278,57 @@ class YouTu(object):
                  
         return ret 
     
-    def AddFace(self, person_id, images, tag=''): 
+    def AddFace(self, person_id, images, tag='', data_type = 0): 
+        
+        req_type='addface' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(person_id) == 0:
-            return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "face_ids":[], "session_id":'', "added": 0}
-        
-        if len(images) == 0:
-            return {'httpcode':0, 'errorcode':self.IMAGES_EMPTY, 'errormsg':'IMAGES_EMPTY', "face_ids":[], "session_id":'', "added": 0}
-        
-        if type(images) != list:
-            return {'httpcode':0, 'errorcode':self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "face_ids":[], "session_id":'', "added": 0}
-            
-        images_content = []
-        for image in images:
-            filepath = os.path.abspath(image)
-            if not os.path.exists(filepath):
-                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_ids":[], "session_id":'', "added": 0}
-            
-            images_content.append(base64.b64encode(open(filepath, 'rb').read()).rstrip())
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('addface')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
+            return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "face_ids":[], "session_id":'', "added": 0, "ret_codes":[]}
         
         data = {
             "app_id": self._appid,
             "person_id" : person_id,   
-            "images": images_content,
-            "tag" : tag,
+            "tag" : tag
         }
+        
+        if len(images) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGES_EMPTY, 'errormsg':'IMAGES_EMPTY', "face_ids":[], "session_id":'', "added": 0, "ret_codes":[]}
+        
+        if type(images) != list:
+            return {'httpcode':0, 'errorcode':self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "face_ids":[], "session_id":'', "added": 0, "ret_codes":[]}
+        
+        if  data_type == 0:
+            images_content = []
+            for image in images:
+                filepath = os.path.abspath(image)
+                if not os.path.exists(filepath):
+                    return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_ids":[], "session_id":'', "added": 0, "ret_codes":[]}
+                
+                images_content.append(base64.b64encode(open(filepath, 'rb').read()).rstrip())
+            data["images"] = images_content
+        else :
+            data["urls"] = images
         
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
             if r.status_code != 200: 
-                  return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "face_ids":[], "session_id":'', "added": 0}
+                  return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "face_ids":[], "session_id":'', "added": 0, "ret_codes":[]}
                   
             ret = r.json()
         except Exception as e:
-            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "face_ids":[], "session_id":'', "added": 0}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "face_ids":[], "session_id":'', "added": 0, "ret_codes":[]}
                  
         return ret 
     
     def DelFace(self, person_id, face_ids):
+        
+        req_type='delface' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "session_id":'', "deleted ": 0}
         
@@ -303,16 +337,6 @@ class YouTu(object):
         
         if type(face_ids) != list:
             return {'httpcode':0, 'errorcode':self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID',  "session_id":'', "deleted ": 0} 
-            
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('delface')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
         
         data = {
             "app_id": self._appid,
@@ -334,19 +358,14 @@ class YouTu(object):
     
     
     def SetInfo(self, person_id, person_name='', tag=''):
+        
+        req_type='setinfo' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "person_id":'', "session_id ": ''}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('setinfo')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
-        
+       
         data = {
             "app_id": self._appid,
             "person_id": person_id,
@@ -367,18 +386,13 @@ class YouTu(object):
         return ret 
         
     def GetInfo(self, person_id):
+    
+        req_type='getinfo' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "person_id":'', "person_name ": '', "face_ids":[], "tag":'', "secret_id":''}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getinfo')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
         
         data = {
             "app_id": self._appid,
@@ -398,15 +412,10 @@ class YouTu(object):
         return ret 
     
     def GetGroupIds(self):
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getgroupids')
         
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
+        req_type='getgroupids' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
         
         data = {
             "app_id": self._appid
@@ -425,19 +434,14 @@ class YouTu(object):
         return ret
         
     def GetPersonIds(self, group_id) :
+    
+        req_type='getpersonids' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(group_id) == 0:
             return {'httpcode':0, 'errorcode':self.GROUP_ID_EMPTY, 'errormsg':'GROUP_ID_EMPTY', "person_ids":[]}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getpersonids')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
-        
+
         data = {
             "app_id": self._appid,
             "group_id": group_id
@@ -456,18 +460,13 @@ class YouTu(object):
         return ret
     
     def GetFaceIds(self, person_id):
+        
+        req_type='getfaceids' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(person_id) == 0:
             return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY',  "face_ids":[]}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getfaceids')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
         
         data = {
             "app_id": self._appid,
@@ -487,18 +486,13 @@ class YouTu(object):
         return ret    
     
     def GetFaceInfo(self, face_id):
+        
+        req_type='getfaceinfo' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
+        
         if len(face_id) == 0:
             return {'httpcode':0, 'errorcode':self.FACE_ID_EMPTY, 'errormsg':'FACE_ID_EMPTY',  "face_info":[]}
-        
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('getfaceinfo')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
         
         data = {
             "app_id": self._appid,
@@ -517,26 +511,28 @@ class YouTu(object):
                 
         return ret 
     
-    def FaceShape(self, image, mode = 0):
-        filepath = os.path.abspath(image)
-        if not os.path.exists(filepath):
-            return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
+    def FaceShape(self, image_path, mode = 0, data_type = 0):
         
-        expired = int(time.time()) + self.EXPIRED_SECONDS
-        url = self.generate_res_url('faceshape')
-        
-        auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
-        sign = auth.app_sign(expired)
-        
-        headers = {
-            'Authorization': sign
-        }
+        req_type='faceshape' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type)
         
         data = {
             "app_id": self._appid,
-            "image": base64.b64encode(open(filepath, 'rb').read()).rstrip(),
             "mode": mode
         }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
         
         r = {}
         try:
@@ -549,9 +545,112 @@ class YouTu(object):
             return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
                 
         return ret
+    
+    def fuzzydetect(self, image_path, data_type = 0, seq = ''):
         
-    def generate_res_url(self, req_type):
-        app_info = conf.get_app_info()
-        return app_info['end_point'] + str(req_type);
+        req_type='fuzzydetect' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 1)
+        
+        data = {
+            "app_id": self._appid,
+            "seq": seq
+        }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
+        
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+  
+            ret = r.json()          
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+                
+        return ret
+    
+    def fooddetect(self, image_path, data_type = 0, seq = ''):
+        
+        req_type='fooddetect' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 1)
+        
+        data = {
+            "app_id": self._appid,
+            "seq": seq
+        }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
+        
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+  
+            ret = r.json()          
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+                
+        return ret
+    
+    def imagetag(self, image_path, data_type = 0, seq = ''):
+    
+        req_type='imagetag' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 1)
+        
+        data = {
+            "app_id": self._appid,
+            "seq": seq
+        }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
+        
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+  
+            ret = r.json()          
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+                
+        return ret
+    
+
     
    

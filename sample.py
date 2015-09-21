@@ -3,9 +3,9 @@
 import time
 import TencentYoutuyun
 
-appid = '105054'
-secret_id = 'J9I1LNj5Wdr8TxI2VyWai3Ziz5TiZ2vZsp'
-secret_key = 'J9I1LNjWdr8TxI2VyWai3ZizTiZ2vZsp'
+appid = 'xxx'
+secret_id = 'xxxxx'
+secret_key = 'xxxxxxxxx'
 userid = '1234567'
 #end_point = TencentYoutuyun.conf.API_TENCENTYUN_END_POINT 
 end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT 

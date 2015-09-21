@@ -31,25 +31,44 @@ python sdk for [腾讯云智能优图服务](http://www.qcloud.com/product/fr.ht
 import time
 import TencentYoutuyun
 
-appid = '105054'
-secret_id = 'J9I1LNj5Wdr8TxI2VyWai3Ziz5TiZ2vZsp'
-secret_key = 'J9I1LNjWdr8TxI2VyWai3ZizTiZ2vZsp'
+appid = 'xxx'
+secret_id = 'xxxxxxx'
+secret_key = 'xxxxxxxx'
+userid= 'xxx'
 
-youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key)
+#end_point = TencentYoutuyun.conf.API_TENCENTYUN_END_POINT 
+end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT 
+
+youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)
 
 ret = youtu.FaceCompare('you_path_one.jpg','you_path_two.jpg')
 print ret
 ```
 
+###SDK内部错误码说明
+    IMAGE_FILE_NOT_EXISTS  -1     //文件不存在
+    IMAGE_NETWORK_ERROR  -2       //网络错误
+    IMAGE_PARAMS_ERROR  -3        //图片参数错误
+    PERSON_ID_EMPTY  -4           //参数person_id 为空
+    GROUP_ID_EMPTY   -5           //参数group_id 为空
+    GROUP_IDS_EMPTY  -6           //参数group_ids 为空
+    IMAGES_EMPTY     -7           //参数images 集合为空
+    FACE_IDS_EMPTY   -8           //参数face_ids 集合为空
+    FACE_ID_EMPTY    -9           //参数face_id为空
+    LIST_TYPE_INVALID  -10        //不是list类型
+    IMAGE_PATH_EMPTY  -11         //传入的image_path为空
+    
 ##初始化
 - 示例
-- `youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key)`
+- `youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)`
 
 - 参数`ytopen_sdk::AppSign`
 	- `appid` 业务中的应用标识AppId
 	- `secret_id` 秘钥SecretId
 	- `secret_key` 秘钥SecretKey
-
+    - `userid`    用户id
+    - `end_point` 服务后台路径，默认是优图开放平台，支持腾讯云
+    
 ##接口说明
 接口调用统一返回值说明
 - 返回值
@@ -57,49 +76,55 @@ print ret
 	
 ###人脸检测
 - 接口
-`DetectFace(self, image, mode = 0)`
+`DetectFace(self, image_path, mode = 0, data_type = 0)`
 - 参数
-	- `image` 待检测的图片路径
+	- `image_path` 待检测的图片路径
 	- `mode` 是否大脸模式，默认非大脸模式
-
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    
 ###人脸配准
 - 接口
-`FaceShape(self, image, mode = 0)`
+`FaceShape(self, image_path, mode = 0, data_type = 0)`
 - 参数
-	- `image` 待检测的图片路径
+	- `image_path` 待检测的图片路径
 	- `mode` 是否大脸模式，默认非大脸模式
-
+    - `data_type` 用于表示image是图片还是url, 0代表图片，1代表url
+    
 ###人脸比对
 - 接口
-`FaceCompare(self, imageA, imageB):`
+`FaceCompare(self, image_pathA, image_pathB, data_type = 0):`
 - 参数
-	- `imageA` 待比对的A图片路径
-	- `imageB` 待比对的B图片路径
-
+	- `image_pathA` 待比对的A图片路径
+	- `image_pathB` 待比对的B图片路径
+    - `data_type` 用于表示image_pathA, image_pathB是图片还是url, 0代表图片，1代表url
+    
 ###人脸验证
 - 接口
-`FaceVerify(self, person_id, image)`
+`FaceVerify(self, person_id, image_path, data_type = 0)`
 - 参数
 	- `person_id` 待验证的个体id
-	- `image` 待验证的图片路径
-
+	- `image_path` 待验证的图片路径
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+     
 ###人脸识别
 - 接口
-`FaceIdentify(self, group_id, image)`
+`FaceIdentify(self, group_id, image_path, data_type = 0)`
 - 参数
 	- `group_id` 识别的组id
-	- `image` 待识别的图片路径
-
+	- `image_path` 待识别的图片路径
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    
 ###新建个体
 - 接口
-        `NewPerson(self, person_id, image, group_ids, person_name= '', tag='')`
+        `(self, person_id, image_path, group_ids, person_name= '', tag='', data_type = 0)`
 - 参数
 	- `person_id` 新建的个体id，用户指定，需要保证app_id下的唯一性
 	- `person_name` 个体对应的姓名
 	- `group_ids` 数组类型，用户指定（组默认创建）的个体存放的组id，可以指定多个组id
-	- `image` 包含个体人脸的图片路径
+	- `image_path` 包含个体人脸的图片路径
 	- `tag` 备注信息，用户自解释字段
-
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    
 ###删除个体
 - 接口
 `DelPerson(self, person_id)`
@@ -108,12 +133,13 @@ print ret
 
 ###增加人脸
 - 接口
-`AddFace(self, person_id, images, tag='')`
+`AddFace(self, person_id, images, tag='', data_type = 0)`
 - 参数
 	- `person_id` 新增人脸的个体身份id
 	- `images` 数组类型，待增加的包含人脸的图片路径，可加入多张（包体大小<2m）
 	-  `tag` 人脸备注信息，用户自解释字段
-
+    - `data_type` 用于表示images是图片还是url, 0代表图片，1代表url
+    
 ###删除人脸
 - 接口
 `DelFace(self, person_id, face_ids)`
@@ -133,7 +159,7 @@ print ret
 - 参数
 	- `person_id` 待设置的个体身份id
 	- `person_name` 新设置的个体名字，为空无效
-	-  `tag` 新设置的人脸备注信息，为空无效
+	- `tag` 新设置的人脸备注信息，为空无效
 
 ###获取组列表
 - 接口
@@ -159,6 +185,23 @@ print ret
 - 参数
 	- `face_id` 待查询的人脸id
 
+###模糊检测
+`fuzzydetect(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    
+###美食检测
+`fooddetect(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    
+###图片分类
+`imagetag(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
 ```
 ```
 更多详情和文档说明参见
