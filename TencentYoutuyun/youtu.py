@@ -37,7 +37,10 @@ class YouTu(object):
         auth = Auth(self._secret_id, self._secret_key, self._appid, self._userid)
         
         sign = auth.app_sign(expired)
-        headers = {'Authorization':sign}    
+        headers = {
+                   'Authorization':sign,
+                   'Content-Type':'text/json'
+        }    
         
         return headers    
         
