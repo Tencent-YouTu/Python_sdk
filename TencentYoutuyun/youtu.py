@@ -49,10 +49,12 @@ class YouTu(object):
         app_info = conf.get_app_info()
         url_api_str = '' 
         
-        if url_type == 0:
+        if url_type == 2:
+            url_api_str = 'youtu/ocrapi'
+        elif url_type == 1:
+            url_api_str = 'youtu/imageapi'
+        else :
             url_api_str = 'youtu/api'
-        else:
-            url_api_str = 'youtu/imageapi'    
             
         return app_info['end_point'] + url_api_str + '/' + str(req_type)
     
@@ -619,6 +621,8 @@ class YouTu(object):
                 
         return ret
     
+    
+
     def imagetag(self, image_path, data_type = 0, seq = ''):
     
         req_type='imagetag' 
@@ -642,6 +646,113 @@ class YouTu(object):
         else:
             data["url"] = image_path
         
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+  
+            ret = r.json()          
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+                
+        return ret
+        
+    def imageporn(self, image_path, data_type = 0, seq = ''):
+    
+        req_type='imageporn' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 1)
+        
+        data = {
+            "app_id": self._appid,
+            "seq": seq
+        }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
+        
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+  
+            ret = r.json()          
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+                
+        return ret
+        
+    def idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = ''):
+    
+        req_type='idcardocr' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        
+        data = {
+            "app_id": self._appid,
+            "seq": seq,
+            "card_type":card_type
+        }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200: 
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+  
+            ret = r.json()          
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+                
+        return ret
+    
+    def namecardocr(self, image_path, data_type = 0, retimage= 1, seq = ''):
+    
+        req_type='namecardocr' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        url = "http://101.226.76.164:18082/youtu/ocrapi/namecardocr"
+        print url
+        data = {
+            "app_id": self._appid,
+            "seq": seq,
+            "retimage": bool(retimage)
+        }
+        
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+        
+        if data_type == 0:    
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+            
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+        else:
+            data["url"] = image_path
+
         r = {}
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
