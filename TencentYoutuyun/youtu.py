@@ -733,8 +733,6 @@ class YouTu(object):
         req_type='namecardocr' 
         headers = self.get_headers(req_type)
         url = self.generate_res_url(req_type, 2)
-        url = "http://101.226.76.164:18082/youtu/ocrapi/namecardocr"
-        print url
         data = {
             "app_id": self._appid,
             "seq": seq,

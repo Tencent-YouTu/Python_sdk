@@ -3,7 +3,7 @@
 import time
 import TencentYoutuyun
 
-# please get such values from http://open.youtu.qq.com
+# please get these values from http://open.youtu.qq.com
 appid = 'x'
 secret_id = 'x'
 secret_key = 'x'
