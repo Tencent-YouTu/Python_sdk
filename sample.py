@@ -3,6 +3,7 @@
 import time
 import TencentYoutuyun
 
+# pip install requests
 # please get these values from http://open.youtu.qq.com
 appid = 'x'
 secret_id = 'x'
@@ -12,8 +13,8 @@ userid = 'x'
 end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT 
 
 youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)
-
-#print  youtu.FaceCompare('you_path_one.jpg','you_path_two.jpg')
+# for python3 
+#print(youtu.FaceCompare('you_path_one.jpg','you_path_two.jpg'))
 
 #print youtu.imageporn("./a.jpg")
 #print youtu.idcardocr("./a.jpg", 1)
