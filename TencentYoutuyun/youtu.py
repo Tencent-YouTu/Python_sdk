@@ -80,8 +80,8 @@ class YouTu(object):
             if not os.path.exists(filepathB):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
             
-            data["imageA"] = base64.b64encode(open(filepathA, 'rb').read()).rstrip()
-            data["imageB"] = base64.b64encode(open(filepathB, 'rb').read()).rstrip()
+            data["imageA"] = base64.b64encode(open(filepathA, 'rb').read()).rstrip().decode('utf-8')
+            data["imageB"] = base64.b64encode(open(filepathB, 'rb').read()).rstrip().decode('utf-8')
         else :
             data["urlA"] = image_pathA
             data["urlB"] = image_pathB
@@ -119,7 +119,7 @@ class YouTu(object):
             if len(person_id) == 0:
                 return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "confidence":0, "ismatch":0, "session_id":''}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else :
             data["url"] = image_path
         
@@ -153,7 +153,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "candidates":[{}]}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else :
             data["url"] = image_path
             
@@ -193,7 +193,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "session_id":'', "image_id":'', "image_height":0, "image_width":0, "face":[{}]}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else :
             data["url"] = image_path
          
@@ -241,7 +241,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
             
@@ -311,7 +311,7 @@ class YouTu(object):
                 if not os.path.exists(filepath):
                     return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_ids":[], "session_id":'', "added": 0, "ret_codes":[]}
                 
-                images_content.append(base64.b64encode(open(filepath, 'rb').read()).rstrip())
+                images_content.append(base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8'))
             data["images"] = images_content
         else :
             data["urls"] = images
@@ -535,7 +535,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "face_shape":[{}], "image_height":0, "image_width":0, "session_id":''}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
         
@@ -570,7 +570,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
         
@@ -605,7 +605,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
         
@@ -642,7 +642,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
         
@@ -677,7 +677,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
         
@@ -713,7 +713,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
         r = {}
@@ -747,7 +747,7 @@ class YouTu(object):
             if not os.path.exists(filepath):
                 return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
             
-            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip()
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
             data["url"] = image_path
 
