@@ -69,16 +69,16 @@ class YouTu(object):
         }
         
         if len(image_pathA) == 0 or len(image_pathB) == 0:
-            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', 'session_id':'', 'similarity':0}
        
         if data_type == 0:  
             filepathA = os.path.abspath(image_pathA)
             filepathB = os.path.abspath(image_pathB)
             
             if not os.path.exists(filepathA):
-                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'similarity':0}
             if not os.path.exists(filepathB):
-                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', 'session_id':'', 'similarity':0}
             
             data["imageA"] = base64.b64encode(open(filepathA, 'rb').read()).rstrip().decode('utf-8')
             data["imageB"] = base64.b64encode(open(filepathB, 'rb').read()).rstrip().decode('utf-8')
@@ -90,11 +90,11 @@ class YouTu(object):
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
             if r.status_code != 200:
-                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':'', 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':'', 'session_id':'', 'similarity':0}
             ret = r.json()
             
         except Exception as e:
-            return {'httpcode':0,  'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'session_id':'', 'eye_sim':0, 'mouth_sim':0, 'nose_sim':0, 'eyebrow_sim':0, 'similarity':0}
+            return {'httpcode':0,  'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'session_id':'', 'similarity':0}
                 
         return ret            
     
