@@ -217,13 +217,13 @@ class YouTu(object):
         url = self.generate_res_url(req_type)
         
         if len(person_id) == 0:
-            return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            return {'httpcode':0, 'errorcode':self.PERSON_ID_EMPTY, 'errormsg':'PERSON_ID_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "group_ids":''}
         
         if len(group_ids) == 0:
-            return {'httpcode':0, 'errorcode':self.GROUP_IDS_EMPTY, 'errormsg':'GROUP_IDS_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            return {'httpcode':0, 'errorcode':self.GROUP_IDS_EMPTY, 'errormsg':'GROUP_IDS_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "group_ids":''}
 
         if type(group_ids) != list:
-            return {'httpcode':0, 'errorcode': self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            return {'httpcode':0, 'errorcode': self.LIST_TYPE_INVALID, 'errormsg':'LIST_TYPE_INVALID', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "group_ids":''}
             
         data = {
             "app_id": self._appid,
@@ -234,12 +234,12 @@ class YouTu(object):
         }
         
         if len(image_path) == 0:
-            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "group_ids":''}
         
         if data_type == 0:    
             filepath = os.path.abspath(image_path)
             if not os.path.exists(filepath):
-                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "group_ids":''}
             
             data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
         else:
@@ -249,11 +249,11 @@ class YouTu(object):
         try:
             r = requests.post(url, headers=headers, data = json.dumps(data))
             if r.status_code != 200: 
-                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':'', "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "group_ids":''}
                 
             ret = r.json()
         except Exception as e:
-            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "person_name":''}
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), "person_id":'', "suc_group":'', "suc_face":0, "session_id":0, "face_id":'', "group_ids":''}
                        
         return ret 
         
