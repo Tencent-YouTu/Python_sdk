@@ -58,6 +58,12 @@ print ret
     LIST_TYPE_INVALID  -10        //不是list类型
     IMAGE_PATH_EMPTY  -11         //传入的image_path为空
     
+    OCR_NOT_ENOUGH_TEXTLINES -5201      //名片无足够的文本
+    OCR_TEXTLINES_SKEWED     -5202      //名片文本行倾斜角度太大
+    OCR_TEXTLINES_FUZZY      -5203      //名片模糊
+    OCR_UNRECOG_NAME         -5204      //名片姓名识别失败
+    OCR_UNRECOG_TEL           -5205     //名片电话识别失败
+    
 ##初始化
 - 示例
 - `youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)`
@@ -173,35 +179,58 @@ print ret
 - 参数
 	- `group_id` 待查询的组id
 
-###获取人脸列表
+### 获取人脸列表
 - 接口
 `GetFaceIds(self, person_id)`
 - 参数
 	- `person_id` 待查询的个体id
 
-###获取人脸信息
+### 获取人脸信息
 - 接口
 `GetFaceInfo(self, face_id)`
 - 参数
 	- `face_id` 待查询的人脸id
-
-###模糊检测
+```
+```
+### 模糊检测
 `fuzzydetect(self, image_path, data_type = 0, seq = '')`
 - 参数
     - `image_path` 标识图片信息
     - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
     
-###美食检测
+### 美食检测
 `fooddetect(self, image_path, data_type = 0, seq = '')`
 - 参数
     - `image_path` 标识图片信息
     - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
     
-###图片分类
+### 图片分类
 `imagetag(self, image_path, data_type = 0, seq = '')`
 - 参数
     - `image_path` 标识图片信息
     - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    
+### 色情图像检测
+`imageporn(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+```
+```
+### 身份证OCR识别
+`idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    - `card_type` 0 代表输入图像是身份证正面， 1代表输入是身份证反面
+
+### 名片ocr识别
+`namecardocr(self, image_path, data_type = 0, retimage= 1, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    - `retimage` 0代表不需要返回识别后图像， 1代表需要返回识别后图像
+
 ```
 ```
 更多详情和文档说明参见

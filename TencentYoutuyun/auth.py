@@ -5,7 +5,6 @@ import random
 import hmac, hashlib
 import binascii
 import base64
-import urlparse 
 from TencentYoutuyun import conf
 
 class Auth(object):
@@ -32,7 +31,7 @@ class Auth(object):
         now = int(time.time())
         rdm = random.randint(0, 999999999)
         plain_text = 'a=' + self._appid + '&k=' + self._secret_id + '&e=' + str(expired) + '&t=' + str(now) + '&r=' + str(rdm) + '&u=' + puserid + '&f=' 
-        bin = hmac.new(self._secret_key, plain_text, hashlib.sha1)
+        bin = hmac.new(self._secret_key.encode(), plain_text.encode(), hashlib.sha1)
         s = bin.hexdigest()
         s = binascii.unhexlify(s)
         s = s + plain_text.encode('ascii')
