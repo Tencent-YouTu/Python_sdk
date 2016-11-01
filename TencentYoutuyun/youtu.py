@@ -22,6 +22,16 @@ class YouTu(object):
         self.FACE_ID_EMPTY   = -9
         self.LIST_TYPE_INVALID = -10
         self.IMAGE_PATH_EMPTY = -11
+
+        self.VALIDATE_DATA_EMPTY = -12
+        self.VIDEO_PATH_EMPTY = -13
+        self.CARD_PATH_EMPTY = -14
+        self.IDCARD_NAME_OR_ID_EMPTY = -15
+
+        self.VIDEO_FILE_NOT_EXISTS = -16
+        self.CARD_FILE_NOT_EXISTS = -17
+
+        self.UNKNOW_CARD_TYPE = -18
         
         self.EXPIRED_SECONDS = 2592000
         self._secret_id  = secret_id
@@ -49,7 +59,9 @@ class YouTu(object):
         app_info = conf.get_app_info()
         url_api_str = '' 
         
-        if url_type == 2:
+        if url_type == 3:
+            url_api_str = 'youtu/openliveapi'
+        elif url_type == 2:
             url_api_str = 'youtu/ocrapi'
         elif url_type == 1:
             url_api_str = 'youtu/imageapi'
@@ -761,6 +773,156 @@ class YouTu(object):
         except Exception as e:
             return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
                 
+        return ret
+
+    def livegetfour(self, seq = ''):
+
+        req_type = 'livegetfour'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 3)
+
+        data = {
+            'app_id' : self._appid,
+            'seq' : seq
+        }
+
+        r = {}
+        try:
+            r = requests.post(url, headers = headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode' : r.status_code, 'errorcode' : '', 'errormsg' : '', 'validate_data' : ''}
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'validate_data' : ''} 
+
+        return ret
+
+    def livedetectfour(self, validate_data, video_path,  seq = '', card_path = '', compare_flag = False):
+
+        req_type = 'livedetectfour' 
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 3)
+
+        data = {
+            'app_id' : self._appid,
+            'seq' : seq
+        }
+
+        if len(validate_data) == 0:
+            return {'httpcode' : 0, 'errorcode' : self.VALIDATE_DATA_EMPTY, 'errormsg' : 'VALIDATE_DATA_EMPTY', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'photo' : ''}
+        
+        if len(video_path) == 0:
+            return {'httpcode' : 0, 'errorcode' : self.VIDEO_PATH_EMPTY, 'errormsg' : 'VIDEO_PATH_EMPTY,', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'photo' : ''}
+
+        if compare_flag == True and len(card_path) == 0:
+            return {'httpcode' : 0, 'errorcode' : self.CARD_PATH_EMPTY, 'errormsg' : 'CARD_PATH_EMPTY', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'photo' : ''}
+
+        videofile = os.path.abspath(video_path)
+        if not os.path.exists(videofile):
+            return {'httpcode' : 0, 'errorcode' : self.VIDEO_FILE_NOT_EXISTS, 'errormsg' : 'VIDEO_FILE_NOT_EXISTS', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'photo' : ''}
+        else:
+            data["video"] = base64.b64encode(open(videofile, 'rb').read()).rstrip()
+
+
+        cardfile = os.path.abspath(card_path)
+        if compare_flag == True :
+            if not os.path.exists(cardfile):
+                return {'httpcode' : 0, 'errorcode' : self.CARD_FILE_NOT_EXISTS, 'errormsg' : 'CARD_FILE_NOT_EXISTS', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'photo' : ''}
+            else:
+                 data["card"] = base64.b64encode(open(cardfile, 'rb').read()).rstrip()
+        
+        data['validate_data'] = validate_data
+        data['compare_flag'] = compare_flag
+
+        r = {}
+        try:
+            r = requests.post(url, headers = headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode' : r.status_code, 'errorcode' : '', 'errormsg' : '', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'photo' : ''}
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'photo' : ''}
+
+        return ret
+
+    def idcardlivedetectfour(self, idcard_number, idcard_name, validate_data, video_path, seq = ''):
+
+        req_type = 'idcardlivedetectfour'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 3)
+
+        data = {
+            'app_id' : self._appid,
+            'seq' : seq
+        }
+
+        if len(idcard_name) == 0 or len(idcard_number)  == 0:
+            return {'httpcode' : 0, 'errorcode' : self.IDCARD_NAME_OR_ID_EMPTY , 'errormsg' : 'IDCARD_NAME_OR_ID_EMPTY ', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'video_photo' : ''}
+
+        if len(validate_data) == 0:
+            return {'httpcode' : 0, 'errorcode' : self.VALIDATE_DATA_EMPTY, 'errormsg' : 'VALIDATE_DATA_EMPTY', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'video_photo' : ''}
+        
+        if len(video_path) == 0:
+            return {'httpcode' : 0, 'errorcode' : self.VIDEO_PATH_EMPTY, 'errormsg' : 'VIDEO_PATH_EMPTY', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'video_photo' : ''}
+
+        videofile = os.path.abspath(video_path)
+        if not os.path.exists(videofile):
+            return {'httpcode' : 0, 'errorcode' : self.VIDEO_FILE_NOT_EXISTS, 'errormsg' : 'VIDEO_FILE_NOT_EXISTS', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'video_photo' : ''}
+        else:
+            data["video"] = base64.b64encode(open(videofile, 'rb').read()).rstrip()
+
+        data['idcard_number'] = idcard_number
+        data['idcard_name'] = idcard_name
+        data['validate_data'] = validate_data
+
+        r = {}
+        try:
+             r = requests.post(url, headers = headers, data = json.dumps(data))
+             if r.status_code != 200 :
+                return {'httpcode' : r.status_code, 'errorcode' : '', 'errormsg' : '', 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'video_photo' : ''}
+             ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'live_status' : '', 'live_msg' : '', 'compare_status' : '', 'compare_msg' : '', 'sim' : 0, 'video_photo' : ''}
+
+        return ret
+
+    def idcardfacecompare(self, idcard_number, idcard_name, image_path, data_type = 0 , session_id = ''):
+
+        req_type = 'idcardfacecompare'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 3)
+
+        data = {
+            'app_id' : self._appid,
+            'session_id' : session_id
+        }
+
+        if len(idcard_name) == 0 or len(idcard_number) == 0 :
+            return {'httpcode' : 0, 'errorcode' : self.IDCARD_NAME_OR_ID_EMPTY , 'errormsg' : 'IDCARD_NAME_OR_ID_EMPTY ', 'similarity' : '', 'session_id' : session_id}
+        
+        if len(image_path) == 0 :
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY',  'similarity' : '', 'session_id' : session_id}
+
+        if data_type == 0:
+            imagefile = os.path.abspath(image_path)
+            if not os.path.exists(imagefile):
+                return {'httpcode' : 0, 'errorcode' : self.IMAGE_FILE_NOT_EXISTS, 'errormsg' : 'IMAGE_FILE_NOT_EXISTS', 'similarity' : '', 'session_id' : session_id}
+            else:
+                data['image'] = base64.b64encode(open(imagefile, 'rb').read()).rstrip()
+        else:
+            data['url'] = image_path
+        data['idcard_number'] = idcard_number
+        data['idcard_name'] = idcard_name
+
+        r = {}
+        try:
+             r = requests.post(url, headers = headers, data = json.dumps(data))
+             if r.status_code != 200:
+                return {'httpcode' : r.status_code, 'errorcode' : '', 'errormsg' : '', 'similarity' : '', 'session_id' : session_id}
+             ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'similarity' : '', 'session_id' : session_id}
+
         return ret
     
 

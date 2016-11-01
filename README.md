@@ -233,6 +233,51 @@ print ret
 
 ```
 ```
+
+### 四字唇语获取
+`livegetfour(self, seq = '')`
+-参数
+   - `seq` 请求唯一标识
+
+```
+```
+
+### 四字活体检测
+`livedetectfour(self, validate_data, video_path,  seq = '', card_path = '', compare_flag = False)`
+-参数
+   - `validate_date` livegetfour接口获取的四字唇语返回值
+   - `video_path` 用户录制视频本地路径
+   - `seq` 请求唯一标识
+   - `card_path` 当compare_flag字段为true时，用于与视频提取图像作人脸对比的图像本地路径
+   - `compare_flag` 决定是否需要作人脸对比，默认为false
+
+```
+```
+
+### 带网纹活体检测
+`idcardlivedetectfour(self, idcard_number, idcard_name, validate_data, video_path, seq = '')`
+-参数
+   - `idcard_number` 带网纹图像对应的身份证号码
+   - `idcard_name` 带网纹图像对应的身份证姓名
+   - `validate_data` livegetfour接口获取的四字唇语返回值
+   - `video_path` 用户录制视频本地路径
+   - `seq` 请求唯一标识
+
+```
+```
+
+### 带网纹人脸对比
+`idcardfacecompare(self, idcard_number, idcard_name, image_path, data_type = 0 , session_id = '')`
+-参数
+   - `idcard_number` 带网纹图像对应的身份证号码
+   - `idcard_name` 带网纹图像对应的身份证姓名
+   - `data_type` 0表示本地图像，1表示url下载图像
+   - `image_path` 当data_type字段为0时，则image_path存放图像本地路径；data_type字段为1时，则image_path存放url路径
+   - `session_id` 请求唯一标识
+
+```
+```
+
 更多详情和文档说明参见
 [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html)
 [腾讯优图开放平台](http://open.youtu.qq.com)

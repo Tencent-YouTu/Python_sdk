@@ -4,6 +4,7 @@ import platform
 
 API_YOUTU_END_POINT = 'http://api.youtu.qq.com/'
 API_TENCENTYUN_END_POINT = 'https://youtu.api.qcloud.com/'
+API_YOUTU_VIP_END_POINT = 'https://vip-api.youtu.qq.com/'
 
 APPID = 'xxx'
 SECRET_ID = 'xxx'
