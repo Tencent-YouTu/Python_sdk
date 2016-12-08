@@ -1,6 +1,6 @@
 # tencentyun-youtu-python
 
-python sdk for [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html) & [腾讯优图开放平台](http://open.youtu.qq.com)
+python sdk for [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html) & [腾讯优图开放平台](http://open.youtu.qq.com) & [腾讯优图人脸核身服务](https://vip-api.youtu.qq.com)
 
 ## 安装
 
@@ -37,7 +37,9 @@ secret_key = 'xxxxxxxx'
 userid= 'xxx'
 
 #end_point = TencentYoutuyun.conf.API_TENCENTYUN_END_POINT  // 腾讯云
+#end_point = TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT   // 人脸核身服务(需联系腾讯优图商务开通权限，否则无法使用)
 end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT        // 优图开放平台
+
 
 youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)
 
@@ -73,13 +75,86 @@ print ret
 	- `secret_id` 秘钥SecretId
 	- `secret_key` 秘钥SecretKey
     - `userid`    用户id
-    - `end_point` 服务后台路径，默认是优图开放平台，支持腾讯云
+    - `end_point` 服务后台路径，默认是优图开放平台，支持腾讯云，人脸核身(核身服务需联系腾讯优图商务开通权限)
     
 ##接口说明
 接口调用统一返回值说明
 - 返回值
 	`Json`格式的返回结果，具体字段参考API文档
-	
+
+## 腾讯优图人脸核身接口(需联系腾讯优图商务开通权限，否则无法使用)
+-接口end_point选择: TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
+
+
+### 四字唇语获取
+`livegetfour(self, seq = '')`
+-参数
+   - `seq` 请求唯一标识
+
+```
+```
+
+### 四字活体检测
+`livedetectfour(self, validate_data, video_path,  seq = '', card_path = '', compare_flag = False)`
+-参数
+   - `validate_date` livegetfour接口获取的四字唇语返回值
+   - `video_path` 用户录制视频本地路径
+   - `seq` 请求唯一标识
+   - `card_path` 当compare_flag字段为true时，用于与视频提取图像作人脸对比的图像本地路径
+   - `compare_flag` 决定是否需要作人脸对比，默认为false
+
+```
+```
+
+### 带网纹活体检测
+`idcardlivedetectfour(self, idcard_number, idcard_name, validate_data, video_path, seq = '')`
+-参数
+   - `idcard_number` 带网纹图像对应的身份证号码
+   - `idcard_name` 带网纹图像对应的身份证姓名
+   - `validate_data` livegetfour接口获取的四字唇语返回值
+   - `video_path` 用户录制视频本地路径
+   - `seq` 请求唯一标识
+
+```
+```
+
+### 带网纹人脸对比
+`idcardfacecompare(self, idcard_number, idcard_name, image_path, data_type = 0 , session_id = '')`
+-参数
+   - `idcard_number` 带网纹图像对应的身份证号码
+   - `idcard_name` 带网纹图像对应的身份证姓名
+   - `data_type` 0表示本地图像，1表示url下载图像
+   - `image_path` 当data_type字段为0时，则image_path存放图像本地路径；data_type字段为1时，则image_path存放url路径
+   - `session_id` 请求唯一标识
+
+```
+```
+
+###不带网纹人脸比对
+- 接口
+`FaceCompare(self, image_pathA, image_pathB, data_type = 0):`
+- 参数
+	- `image_pathA` 待比对的A图片路径
+	- `image_pathB` 待比对的B图片路径
+    - `data_type` 用于表示image_pathA, image_pathB是图片还是url, 0代表图片，1代表url
+
+```
+```
+
+### 身份证OCR识别
+`idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    - `card_type` 0 代表输入图像是身份证正面， 1代表输入是身份证反面
+
+```
+```
+
+## 腾讯优图开放平台接口
+-接口end_point选择: TencentYoutuyun.conf.API_YOUTU_END_POINT
+
+
 ###人脸检测
 - 接口
 `DetectFace(self, image_path, mode = 0, data_type = 0)`
@@ -234,49 +309,7 @@ print ret
 ```
 ```
 
-### 四字唇语获取
-`livegetfour(self, seq = '')`
--参数
-   - `seq` 请求唯一标识
 
-```
-```
-
-### 四字活体检测
-`livedetectfour(self, validate_data, video_path,  seq = '', card_path = '', compare_flag = False)`
--参数
-   - `validate_date` livegetfour接口获取的四字唇语返回值
-   - `video_path` 用户录制视频本地路径
-   - `seq` 请求唯一标识
-   - `card_path` 当compare_flag字段为true时，用于与视频提取图像作人脸对比的图像本地路径
-   - `compare_flag` 决定是否需要作人脸对比，默认为false
-
-```
-```
-
-### 带网纹活体检测
-`idcardlivedetectfour(self, idcard_number, idcard_name, validate_data, video_path, seq = '')`
--参数
-   - `idcard_number` 带网纹图像对应的身份证号码
-   - `idcard_name` 带网纹图像对应的身份证姓名
-   - `validate_data` livegetfour接口获取的四字唇语返回值
-   - `video_path` 用户录制视频本地路径
-   - `seq` 请求唯一标识
-
-```
-```
-
-### 带网纹人脸对比
-`idcardfacecompare(self, idcard_number, idcard_name, image_path, data_type = 0 , session_id = '')`
--参数
-   - `idcard_number` 带网纹图像对应的身份证号码
-   - `idcard_name` 带网纹图像对应的身份证姓名
-   - `data_type` 0表示本地图像，1表示url下载图像
-   - `image_path` 当data_type字段为0时，则image_path存放图像本地路径；data_type字段为1时，则image_path存放url路径
-   - `session_id` 请求唯一标识
-
-```
-```
 
 更多详情和文档说明参见
 [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html)

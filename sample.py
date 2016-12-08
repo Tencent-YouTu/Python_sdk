@@ -18,6 +18,8 @@ end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT
 youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)
 session_id = "xxxxx"
 
+
+#for TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT end_point
 #get four-character idioms
 #retlivegetfour = youtu.livegetfour(session_id)
 #print retlivegetfour
