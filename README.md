@@ -1,6 +1,6 @@
 # tencentyun-youtu-python
 
-python sdk for [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html) & [腾讯优图开放平台](http://open.youtu.qq.com) & [腾讯优图人脸核身服务](https://vip-api.youtu.qq.com)
+python sdk for [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html) & [腾讯优图开放平台](http://open.youtu.qq.com) 
 
 ## 安装
 
