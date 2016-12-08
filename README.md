@@ -82,6 +82,38 @@ print ret
 - 返回值
 	`Json`格式的返回结果，具体字段参考API文档
 
+- 人脸核身服务接口列表(需联系腾讯优图商务开通权限，否则无法使用)
+  - livegetfour(self, seq = '')
+  - livedetectfour(self, validate_data, video_path,  seq = '', card_path = '', compare_flag = False)
+  - idcardlivedetectfour(self, idcard_number, idcard_name, validate_data, video_path, seq = '')
+  - idcardfacecompare(self, idcard_number, idcard_name, image_path, data_type = 0 , session_id = '')
+  - FaceCompare(self, image_pathA, image_pathB, data_type = 0)
+  - idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')
+
+- 腾讯优图开放平台接口列表
+  - DetectFace(self, image_path, mode = 0, data_type = 0)
+  - FaceShape(self, image_path, mode = 0, data_type = 0)
+  - FaceCompare(self, image_pathA, image_pathB, data_type = 0)
+  - FaceVerify(self, person_id, image_path, data_type = 0)
+  - FaceIdentify(self, group_id, image_path, data_type = 0)
+  - NewPerson(self, person_id, image_path, group_ids, person_name= '', tag='', data_type = 0)
+  - DelPerson(self, person_id)
+  - AddFace(self, person_id, images, tag='', data_type = 0)
+  - DelFace(self, person_id, face_ids)
+  - GetInfo(self, person_id)
+  - SetInfo(self, person_id, person_name='', tag='')
+  - GetGroupIds(self)
+  - GetPersonIds(self, group_id)
+  - GetFaceIds(self, person_id)
+  - GetFaceInfo(self, face_id)
+  - fuzzydetect(self, image_path, data_type = 0, seq = '')
+  - fooddetect(self, image_path, data_type = 0, seq = '')
+  - imagetag(self, image_path, data_type = 0, seq = '')
+  - imageporn(self, image_path, data_type = 0, seq = '')
+  - idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')
+  - namecardocr(self, image_path, data_type = 0, retimage= 1, seq = '')
+
+
 ## 腾讯优图人脸核身接口(需联系腾讯优图商务开通权限，否则无法使用)
 - 接口end_point选择: TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
 
