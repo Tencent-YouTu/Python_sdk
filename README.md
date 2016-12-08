@@ -78,7 +78,9 @@ print ret
     - `end_point` 服务后台路径，默认是优图开放平台，支持腾讯云，人脸核身(核身服务需联系腾讯优图商务开通权限)
 
 ##注意事项
-- API分为开放平台API和核身API，核身API访问权限需要联系商务开通；开放平台API访问end_point为TencentYoutuyun.conf.API_YOUTU_END_POINT， 核身API访问end_point为TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
+- API分为开放平台API和人脸核身API，人脸核身API访问权限需要联系商务开通；
+  - 开放平台API访问end_point为TencentYoutuyun.conf.API_YOUTU_END_POINT
+  - 人脸核身API访问end_point为TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
     
 ##接口说明
 接口调用统一返回值说明
