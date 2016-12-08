@@ -83,7 +83,7 @@ print ret
 	`Json`格式的返回结果，具体字段参考API文档
 
 ## 腾讯优图人脸核身接口(需联系腾讯优图商务开通权限，否则无法使用)
--接口end_point选择: TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
+- 接口end_point选择: TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
 
 
 ### 四字唇语获取
@@ -152,7 +152,7 @@ print ret
 ```
 
 ## 腾讯优图开放平台接口
--接口end_point选择: TencentYoutuyun.conf.API_YOUTU_END_POINT
+- 接口end_point选择: TencentYoutuyun.conf.API_YOUTU_END_POINT
 
 
 ###人脸检测
