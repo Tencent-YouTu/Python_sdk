@@ -83,6 +83,7 @@ print ret
 	`Json`格式的返回结果，具体字段参考API文档
 
 - 人脸核身服务接口列表(需联系腾讯优图商务开通权限，否则无法使用)
+  - 接口end_point选择: TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
   - livegetfour(self, seq = '')
   - livedetectfour(self, validate_data, video_path,  seq = '', card_path = '', compare_flag = False)
   - idcardlivedetectfour(self, idcard_number, idcard_name, validate_data, video_path, seq = '')
@@ -91,6 +92,7 @@ print ret
   - idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')
 
 - 腾讯优图开放平台接口列表
+  - 接口end_point选择: TencentYoutuyun.conf.API_YOUTU_END_POINT
   - DetectFace(self, image_path, mode = 0, data_type = 0)
   - FaceShape(self, image_path, mode = 0, data_type = 0)
   - FaceCompare(self, image_pathA, image_pathB, data_type = 0)
