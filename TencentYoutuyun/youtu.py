@@ -925,6 +925,29 @@ class YouTu(object):
 
         return ret
     
-
+    def ValidateIdcard(self, idcard_number, idcard_name, seq = "default"):
+        
+        req_type = 'validateidcard'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 3)
+        
+        data = {
+            "app_id": self._appid,
+            "idcard_number": idcard_number,
+            "idcard_name": idcard_name,
+            "seq": seq
+        }
+        
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':'', 'session_id':''}
+            ret = r.json()
+            
+        except Exception as e:
+            return {'httpcode':0,  'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e), 'session_id':''}
+                
+        return ret
     
    

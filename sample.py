@@ -59,3 +59,7 @@ session_id = "xxxxx"
 #id card ocr: use url id card image
 #retidcardocr = youtu.idcardocr('http://xxx.jpg', data_type = 1, card_type = 0)
 #print retidcardocr
+
+#id card validate: validate the idcard is correct
+#retvalidateidcard = youtu.ValidateIdcard('123456789987654321', '张三', session_id)
+#print retvalidateidcard
