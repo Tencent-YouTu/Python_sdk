@@ -86,6 +86,7 @@ print ret
 - API分为开放平台API和人脸核身API，人脸核身API访问权限需要联系商务开通；
   - 开放平台API访问end_point为TencentYoutuyun.conf.API_YOUTU_END_POINT
   - 人脸核身API访问end_point为TencentYoutuyun.conf.API_YOUTU_VIP_END_POINT
+- 所有接口，对于编码问题，涉及到中文的请使用encode('iso8859-1').decode('utf-8')进行转码
 ```
  
 ## 接口说明
