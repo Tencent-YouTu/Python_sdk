@@ -407,6 +407,33 @@ print ret
 
 ```
 
+### 行驶证&驾驶证ocr识别
+```
+`driverlicenseocr(self, image_path, data_type = 0, proc_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    - `proc_type` 0代表行驶证， 1代表驾驶证
+
+```
+
+### 新版名片ocr识别
+```
+`bcocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 通用ocr识别
+```
+`generalocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
 
 更多详情和文档说明参见
 [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html)

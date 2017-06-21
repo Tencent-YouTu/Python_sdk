@@ -60,6 +60,18 @@ session_id = "xxxxx"
 #retidcardocr = youtu.idcardocr('http://xxx.jpg', data_type = 1, card_type = 0)
 #print retidcardocr
 
+#driver license ocr: use local image
+#retdriverlicenseocr = youtu.driverlicenseocr('ocr_xsz_01.jpg', data_type = 0, proc_type = 0)
+#print retdriverlicenseocr
+
+#business card ocr: use local image
+#retbcocr = youtu.bcocr('ocr_card_01.jpg', data_type = 0)
+#print retbcocr
+
+#general ocr: use local image
+#retgeneralocr = youtu.generalocr('icon_ocr_common01.png', data_type = 0)
+#print retgeneralocr
+
 #id card validate: validate the idcard is correct
 #retvalidateidcard = youtu.ValidateIdcard('123456789987654321', '张三', session_id)
 #print retvalidateidcard
