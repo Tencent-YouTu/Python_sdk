@@ -12,7 +12,7 @@ python sdk for [腾讯云智能优图服务](http://www.qcloud.com/product/fr.ht
 #### 构建工程
 ```
 1. 下载sdk到您的目录${python_sdk}
-	git clone https://github.com/TencentYouTu/python_sdk.git
+	git clone https://github.com/Tencent-YouTu/Python_sdk.git
 2. 在您需要使用sdk的文件中import TencentYoutuyun包
 ```
 
@@ -128,6 +128,9 @@ print ret
   - imageporn(self, image_path, data_type = 0, seq = '')
   - idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')
   - namecardocr(self, image_path, data_type = 0, retimage= 1, seq = '')
+  - driverlicenseocr(self, image_path, data_type = 0, proc_type = 0, seq = '')
+  - bcocr(self, image_path, data_type = 0, seq = '')
+  - generalocr(self, image_path, data_type = 0, seq = '')
 ```
 
 ## 腾讯优图人脸核身接口(需联系腾讯优图商务开通权限，否则无法使用)
