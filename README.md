@@ -127,7 +127,6 @@ print ret
   - imagetag(self, image_path, data_type = 0, seq = '')
   - imageporn(self, image_path, data_type = 0, seq = '')
   - idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')
-  - namecardocr(self, image_path, data_type = 0, retimage= 1, seq = '')
   - driverlicenseocr(self, image_path, data_type = 0, proc_type = 0, seq = '')
   - bcocr(self, image_path, data_type = 0, seq = '')
   - generalocr(self, image_path, data_type = 0, seq = '')
@@ -398,16 +397,6 @@ print ret
     - `image_path` 标识图片信息
     - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
     - `card_type` 0 代表输入图像是身份证正面， 1代表输入是身份证反面
-```
-
-### 名片ocr识别
-```
-`namecardocr(self, image_path, data_type = 0, retimage= 1, seq = '')`
-- 参数
-    - `image_path` 标识图片信息
-    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
-    - `retimage` 0代表不需要返回识别后图像， 1代表需要返回识别后图像
-
 ```
 
 ### 行驶证&驾驶证ocr识别
