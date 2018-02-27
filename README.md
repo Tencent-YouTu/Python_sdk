@@ -1,6 +1,6 @@
 # tencentyun-youtu-python
 
-python sdk for [腾讯云智能优图服务](http://www.qcloud.com/product/fr.html) & [腾讯优图开放平台](http://open.youtu.qq.com) 
+python sdk for [腾讯优图开放平台](http://open.youtu.qq.com) 
 
 ## 安装
 
@@ -112,6 +112,7 @@ print ret
   - FaceCompare(self, image_pathA, image_pathB, data_type = 0)
   - FaceVerify(self, person_id, image_path, data_type = 0)
   - FaceIdentify(self, group_id, image_path, data_type = 0)
+  - MultiFaceIdentify(self, group_id, group_ids, image_path, data_type = 0, topn = 5, min_size = 40)
   - NewPerson(self, person_id, image_path, group_ids, person_name= '', tag='', data_type = 0)
   - DelPerson(self, person_id)
   - AddFace(self, person_id, images, tag='', data_type = 0)
@@ -126,10 +127,15 @@ print ret
   - fooddetect(self, image_path, data_type = 0, seq = '')
   - imagetag(self, image_path, data_type = 0, seq = '')
   - imageporn(self, image_path, data_type = 0, seq = '')
+  - imageterrorism(self, image_path, data_type = 0, seq = '')
+  - carclassify(self, image_path, data_type = 0, seq = '')
   - idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')
   - driverlicenseocr(self, image_path, data_type = 0, proc_type = 0, seq = '')
   - bcocr(self, image_path, data_type = 0, seq = '')
   - generalocr(self, image_path, data_type = 0, seq = '')
+  - creditcardocr(self, image_path, data_type = 0, seq = '')
+  - bizlicenseocr(self, image_path, data_type = 0, seq = '')
+  - plateocr(self, image_path, data_type = 0, seq = '')
 ```
 
 ## 腾讯优图人脸核身接口(需联系腾讯优图商务开通权限，否则无法使用)
@@ -264,9 +270,21 @@ print ret
 - 参数
 	- `group_id` 识别的组id
 	- `image_path` 待识别的图片路径
-    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+  - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
 ```
- 
+
+### 多人脸检索
+```
+
+- 接口
+`MultiFaceIdentify(self, group_id, group_ids, image_path, data_type = 0, topn = 5, min_size = 40)`
+- 参数
+  - `group_id` 识别的组id
+  - `group_ids` 识别的个体存放的组id，可以指定多个组id，用户指定
+  - `topn` 候选人脸数量，一般使用默认值5
+  - `min_size` 人脸检测最小尺寸，一般使用默认值40
+```
+
 ### 新建个体
 ```
 - 接口
@@ -390,6 +408,22 @@ print ret
     - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
 ```
 
+### 暴恐图片识别
+```
+`imageterrorism(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+```
+
+### 车辆属性识别
+```
+`carclassify(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+```
+
 ### 身份证OCR识别
 ```
 `idcardocr(self, image_path, data_type = 0, card_type = 1 ,seq = '')`
@@ -427,6 +461,32 @@ print ret
 
 ```
 
+### 银行卡OCR识别
+```
+`creditcardocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 营业执照OCR识别
+```
+`bizlicenseocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 车牌OCR识别
+```
+`plateocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
 更多详情和文档说明参见
-[腾讯云智能优图服务](http://www.qcloud.com/product/fr.html)
 [腾讯优图开放平台](http://open.youtu.qq.com)
