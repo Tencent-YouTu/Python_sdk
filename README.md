@@ -21,7 +21,7 @@ python sdk for [腾讯优图开放平台](http://open.youtu.qq.com)
 - `AppId` 平台添加应用后分配的AppId
 - `SecretId` 平台添加应用后分配的SecretId
 - `SecretKey` 平台添加应用后分配的SecretKey
-- `签名` 接口鉴权凭证，由AppId、SecretId、SecretKey等生成，详见<http://open.youtu.qq.com/welcome/authentication>
+- `签名` 接口鉴权凭证，由AppId、SecretId、SecretKey等生成，详见<http://open.youtu.qq.com/#/develop/tool-authentication>
 
 
 ## 使用示例
