@@ -1,6 +1,6 @@
 # tencentyun-youtu-python
 
-python sdk for [腾讯优图开放平台](http://open.youtu.qq.com) 
+python sdk for [腾讯优图开放平台](https://open.youtu.qq.com) 
 
 ## 安装
 
@@ -21,7 +21,7 @@ python sdk for [腾讯优图开放平台](http://open.youtu.qq.com)
 - `AppId` 平台添加应用后分配的AppId
 - `SecretId` 平台添加应用后分配的SecretId
 - `SecretKey` 平台添加应用后分配的SecretKey
-- `签名` 接口鉴权凭证，由AppId、SecretId、SecretKey等生成，详见<http://open.youtu.qq.com/#/develop/tool-authentication>
+- `签名` 接口鉴权凭证，由AppId、SecretId、SecretKey等生成，详见<https://open.youtu.qq.com/#/develop/tool-authentication/auth>
 
 
 ## 使用示例
@@ -489,4 +489,4 @@ print ret
 ```
 
 更多详情和文档说明参见
-[腾讯优图开放平台](http://open.youtu.qq.com)
+[腾讯优图开放平台](https://open.youtu.qq.com)
