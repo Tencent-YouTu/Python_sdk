@@ -488,5 +488,100 @@ print ret
 
 ```
 
+### 结构化OCR识别
+```
+`structureocr(self, image_path, data_type = 0, ocr_template = '', seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    - `ocr_template` 用于模板
+
+```
+
+### 护照OCR识别
+```
+`passportocr(self, image_path, data_type = 0, ocr_template = '', seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    - `ocr_template` 用于模板
+
+```
+
+### 增值税发票OCR识别
+```
+`invoiceocr(self, image_path, data_type = 0, ocr_template='', seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+    - `ocr_template` 用于模板
+
+```
+
+### 电子运单OCR识别
+```
+`waybillocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 高精度OCR识别
+```
+`hpgeneralocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 表格OCR识别
+```
+`tableocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 速算OCR识别
+```
+`arithmeticocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 金融票据OCR识别
+```
+`finanocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+### 车辆VIN码OCR识别
+```
+`vinocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+
+### 英文OCR识别
+```
+`ehocr(self, image_path, data_type = 0, seq = '')`
+- 参数
+    - `image_path` 标识图片信息
+    - `data_type` 用于表示image_path是图片还是url, 0代表图片，1代表url
+
+```
+
+
 更多详情和文档说明参见
 [腾讯优图开放平台](http://open.youtu.qq.com)
