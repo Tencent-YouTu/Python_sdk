@@ -1059,6 +1059,386 @@ class YouTu(object):
 
         return ret
 
+    def structureocr(self, image_path, data_type = 0, ocr_template = '', seq = ''):
+
+        req_type='structureocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+            "ocr_template":ocr_template
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+
+        return ret
+
+    def passportocr(self, image_path, data_type = 0, ocr_template = '', seq = ''):
+
+        req_type='passportocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+            "ocr_template": ocr_template
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+
+        return ret
+
+    def invoiceocr(self, image_path, data_type = 0, ocr_template='', seq = ''):
+
+        req_type='invoiceocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+            "ocr_template": ocr_template
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+
+        return ret
+
+    def waybillocr(self, image_path, data_type = 0, seq = ''):
+
+        req_type='waybillocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+
+        return ret
+
+    def hpgeneralocr(self, image_path, data_type = 0, seq = ''):
+
+        req_type='hpgeneralocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+
+        return ret
+
+    def tableocr(self, image_path, data_type = 0, seq = ''):
+
+        req_type='tableocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode':0, 'errorcode':self.IMAGE_PATH_EMPTY, 'errormsg':'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode':0, 'errorcode':self.IMAGE_FILE_NOT_EXISTS, 'errormsg':'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data = json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode':r.status_code, 'errorcode':'', 'errormsg':''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode':0, 'errorcode':self.IMAGE_NETWORK_ERROR, 'errormsg':str(e)}
+
+        return ret
+
+    def arithmeticocr(self, image_path, data_type=0, seq=''):
+
+        req_type = 'arithmeticocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_PATH_EMPTY, 'errormsg': 'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode': 0, 'errorcode': self.IMAGE_FILE_NOT_EXISTS, 'errormsg': 'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data=json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode': r.status_code, 'errorcode': '', 'errormsg': ''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_NETWORK_ERROR, 'errormsg': str(e)}
+
+        return ret
+
+    def finanocr(self, image_path, ocr_template='', data_type=0, seq=''):
+
+        req_type = 'finanocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+            "ocr_template": ocr_template
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_PATH_EMPTY, 'errormsg': 'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode': 0, 'errorcode': self.IMAGE_FILE_NOT_EXISTS, 'errormsg': 'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data=json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode': r.status_code, 'errorcode': '', 'errormsg': ''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_NETWORK_ERROR, 'errormsg': str(e)}
+
+        return ret
+
+    def vinocr(self, image_path, data_type=0, seq=''):
+
+        req_type = 'vinocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_PATH_EMPTY, 'errormsg': 'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode': 0, 'errorcode': self.IMAGE_FILE_NOT_EXISTS, 'errormsg': 'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            print "headers=",headers
+            print "url=",url
+            r = requests.post(url, headers=headers, data=json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode': r.status_code, 'errorcode': '', 'errormsg': ''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_NETWORK_ERROR, 'errormsg': str(e)}
+
+        return ret
+
+    def handwritingocr(self, image_path, data_type=0, seq=''):
+
+        req_type = 'handwritingocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_PATH_EMPTY, 'errormsg': 'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode': 0, 'errorcode': self.IMAGE_FILE_NOT_EXISTS, 'errormsg': 'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data=json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode': r.status_code, 'errorcode': '', 'errormsg': ''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_NETWORK_ERROR, 'errormsg': str(e)}
+
+        return ret
+
+    def ehocr(self, image_path, data_type=0, seq=''):
+
+        req_type = 'ehocr'
+        headers = self.get_headers(req_type)
+        url = self.generate_res_url(req_type, 2)
+        data = {
+            "app_id": self._appid,
+            "session_id": seq,
+        }
+
+        if len(image_path) == 0:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_PATH_EMPTY, 'errormsg': 'IMAGE_PATH_EMPTY'}
+
+        if data_type == 0:
+            filepath = os.path.abspath(image_path)
+            if not os.path.exists(filepath):
+                return {'httpcode': 0, 'errorcode': self.IMAGE_FILE_NOT_EXISTS, 'errormsg': 'IMAGE_FILE_NOT_EXISTS'}
+
+            data["image"] = base64.b64encode(open(filepath, 'rb').read()).rstrip().decode('utf-8')
+        else:
+            data["url"] = image_path
+
+        r = {}
+        try:
+            r = requests.post(url, headers=headers, data=json.dumps(data))
+            if r.status_code != 200:
+                return {'httpcode': r.status_code, 'errorcode': '', 'errormsg': ''}
+
+            ret = r.json()
+        except Exception as e:
+            return {'httpcode': 0, 'errorcode': self.IMAGE_NETWORK_ERROR, 'errormsg': str(e)}
+
+        return ret
+
     def livegetfour(self, seq = ''):
 
         req_type = 'livegetfour'
